@@ -28,7 +28,7 @@ export const authSignUpSchema: ZodType<AuthFormType> = z.object({
 		.refine(val => val, "You must agree to the Terms of Service"),
 })
 
-export const authLoginSchema: ZodType<Partial<AuthFormType>> = z.object({
+export const authSignInSchema: ZodType<Partial<AuthFormType>> = z.object({
 	email: z.string().nonempty("Email is a required field").email({ message: "Invalid email address" }),
 	password: z.string().nonempty("Password is a required field"),
 })

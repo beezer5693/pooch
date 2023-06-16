@@ -12,10 +12,12 @@ import { Input } from "@/components/ui/Input"
 import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
+import { toast } from "@/hooks/use-toast"
 
 const UserAuthSignUpForm: FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
-	const [loading, setLoading] = useState<boolean>(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof authSignUpSchema>>({
@@ -33,10 +35,28 @@ const UserAuthSignUpForm: FC = () => {
 	} = form
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof authSignUpSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values)
+	const onSubmit = async (values: z.infer<typeof authSignUpSchema>) => {
+		setIsLoading(true)
+
+		try {
+			await fetch("/api/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(values),
+			})
+
+			await signIn("credentials", values)
+		} catch (error: any) {
+			toast({
+				title: "An error occurred.",
+				description: "Invalid credentials",
+				variant: "destructive",
+			})
+		} finally {
+			setIsLoading(false)
+		}
 	}
 
 	return (
@@ -50,7 +70,7 @@ const UserAuthSignUpForm: FC = () => {
 							<FormLabel>Name</FormLabel>
 							<FormControl>
 								<div className="relative">
-									<Input className={cn(errors.name && "border-destructive")} {...field} required />
+									<Input disabled={isLoading} className={cn(errors.name && "border-destructive")} {...field} required />
 									{errors.name && (
 										<AlertCircle
 											className="absolute right-3 top-1/2 -translate-y-1/2 stroke-[1.5px] text-destructive"
@@ -71,7 +91,12 @@ const UserAuthSignUpForm: FC = () => {
 							<FormLabel>Email</FormLabel>
 							<FormControl>
 								<div className="relative">
-									<Input className={cn(errors.email && "border-destructive")} {...field} required />
+									<Input
+										disabled={isLoading}
+										className={cn(errors.email && "border-destructive")}
+										{...field}
+										required
+									/>
 									{errors.email && (
 										<AlertCircle
 											className="absolute right-3 top-1/2 -translate-y-1/2 stroke-[1.5px] text-destructive"
@@ -93,6 +118,7 @@ const UserAuthSignUpForm: FC = () => {
 							<FormControl>
 								<div className="relative">
 									<Input
+										disabled={isLoading}
 										className={cn(errors.password && "border-destructive")}
 										type={showPassword ? "text" : "password"}
 										{...field}
@@ -102,7 +128,7 @@ const UserAuthSignUpForm: FC = () => {
 										<EyeOff
 											onClick={() => setShowPassword(false)}
 											className={cn(
-												"absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
+												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
 											)}
 											size={20}
 										/>
@@ -110,7 +136,7 @@ const UserAuthSignUpForm: FC = () => {
 										<Eye
 											onClick={() => setShowPassword(true)}
 											className={cn(
-												"absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
+												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
 											)}
 											size={20}
 										/>
@@ -159,8 +185,8 @@ const UserAuthSignUpForm: FC = () => {
 					/>
 				</div>
 				<div className="pt-3.5">
-					<Button disabled={loading} className="w-full disabled:opacity-70" type="submit">
-						{loading && <Loader2 className="mr-2 animate-spin text-primary-foreground" size={17} />}
+					<Button disabled={isLoading} className="w-full disabled:opacity-70" type="submit">
+						{isLoading && <Loader2 className="mr-2 animate-spin text-primary-foreground" size={17} />}
 						<span>Create account</span>
 					</Button>
 				</div>
