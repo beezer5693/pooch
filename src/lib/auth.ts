@@ -80,6 +80,7 @@ export const authOptions: NextAuthOptions = {
 			return "/"
 		},
 	},
+	debug: true,
 	secret: process.env.NEXTAUTH_SECRET,
 }
 
