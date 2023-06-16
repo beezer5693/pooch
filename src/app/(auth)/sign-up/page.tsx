@@ -7,6 +7,7 @@ import UserAuthSignUpForm from "@/components/auth/AuthSignupForm"
 import GoogleAuth from "@/components/auth/GoogleAuth"
 import Link from "next/link"
 import Logo from "@/components/Logo"
+import DiscordAuth from "@/components/auth/DiscordAuth"
 
 const SignUp: FC = () => {
 	const [mounted, setMounted] = useState<boolean>(false)
@@ -39,10 +40,13 @@ const SignUp: FC = () => {
 							<UserAuthSignUpForm />
 							<div className="flex items-center gap-3">
 								<div className="flex-1 border-t"></div>
-								<p className="text-xs text-muted-foreground">OR</p>
+								<p className="text-xs text-muted-foreground">OR CONTINUE WITH</p>
 								<div className="flex-1 border-t"></div>
 							</div>
-							<GoogleAuth />
+							<div className="flex gap-4">
+								<GoogleAuth />
+								<DiscordAuth />
+							</div>
 						</div>
 					</div>
 				</div>

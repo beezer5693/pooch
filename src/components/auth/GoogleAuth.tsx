@@ -22,7 +22,7 @@ const GoogleAuth: FC = () => {
 				description: "An error occurred while trying to sign in with Google.",
 				variant: "destructive",
 				action: (
-					<Button className="h-[34px] shrink-0 px-2 text-xs" variant="outline" onClick={() => loginWithGoogle}>
+					<Button className="h-[34px] shrink-0 px-2 text-xs" variant="outline" onClick={loginWithGoogle}>
 						Try again
 					</Button>
 				),
@@ -39,7 +39,7 @@ const GoogleAuth: FC = () => {
 			) : (
 				<Icons.google className="mr-2 h-4 w-4 text-accent-foreground" />
 			)}
-			<span>Continue with Google</span>
+			<span>Google</span>
 		</Button>
 	)
 }

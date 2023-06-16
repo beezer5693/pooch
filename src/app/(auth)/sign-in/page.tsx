@@ -5,6 +5,7 @@ import { useTheme } from "next-themes"
 import { UseThemeProps } from "next-themes/dist/types"
 import UserAuthSignInForm from "@/components/auth/AuthSigninForm"
 import GoogleAuth from "@/components/auth/GoogleAuth"
+import DiscordAuth from "@/components/auth/DiscordAuth"
 import Link from "next/link"
 import Logo from "@/components/Logo"
 
@@ -39,10 +40,13 @@ const SignIn: FC = () => {
 							<UserAuthSignInForm />
 							<div className="flex items-center gap-3">
 								<div className="flex-1 border-t"></div>
-								<p className="text-xs text-muted-foreground">OR</p>
+								<p className="text-xs text-muted-foreground">OR CONTINUE WITH</p>
 								<div className="flex-1 border-t"></div>
 							</div>
-							<GoogleAuth />
+							<div className="flex gap-4">
+								<GoogleAuth />
+								<DiscordAuth />
+							</div>
 						</div>
 					</div>
 				</div>
