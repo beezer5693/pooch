@@ -5,6 +5,9 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authSignUpSchema } from "@/lib/formValidation"
 import { useForm } from "react-hook-form"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
 import { Checkbox } from "@/components/ui/Checkbox"
 import { Button } from "@/components/ui/Button"
@@ -13,11 +16,18 @@ import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
-import { toast } from "@/hooks/use-toast"
 
-const UserAuthSignUpForm: FC = () => {
+const AuthSignUpForm: FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+
+	const session = useSession()
+	const router = useRouter()
+	const { toast } = useToast()
+
+	useEffect(() => {
+		session.status === "authenticated" && router.push("/")
+	}, [router, session])
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof authSignUpSchema>>({
@@ -35,28 +45,31 @@ const UserAuthSignUpForm: FC = () => {
 	} = form
 
 	// 2. Define a submit handler.
-	const onSubmit = async (values: z.infer<typeof authSignUpSchema>) => {
+	const onSubmit = (values: z.infer<typeof authSignUpSchema>) => {
 		setIsLoading(true)
 
-		try {
-			await fetch("/api/register", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(values),
+		fetch("/api/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(values),
+		})
+			.then(() => {
+				signIn("credentials", {
+					...values,
+					redirect: false,
+				})
 			})
-
-			await signIn("credentials", values)
-		} catch (error: any) {
-			toast({
-				title: "An error occurred.",
-				description: "Invalid credentials",
-				variant: "destructive",
+			.catch(error => {
+				toast({
+					title: "Uh oh! Something went wrong.",
+					description: error.response.data.message,
+					variant: "destructive",
+				})
+				setIsLoading(false)
 			})
-		} finally {
-			setIsLoading(false)
-		}
+			.finally(() => setIsLoading(false))
 	}
 
 	return (
@@ -195,4 +208,4 @@ const UserAuthSignUpForm: FC = () => {
 	)
 }
 
-export default UserAuthSignUpForm
+export default AuthSignUpForm

@@ -1,23 +1,32 @@
 "use client"
 
-import { FC, useEffect, useState } from "react"
+import { useEffect, useState, FC } from "react"
+import { signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
+import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authSignInSchema } from "@/lib/formValidation"
-import { useForm } from "react-hook-form"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { signIn } from "next-auth/react"
-import { toast } from "@/hooks/use-toast"
+import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
 
-const UserAuthSignInForm: FC = () => {
+const AuthSignInForm: FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 
-	// 1. Define your form.
+	const session = useSession()
+	const router = useRouter()
+	const { toast } = useToast()
+
+	useEffect(() => {
+		session.status === "authenticated" && router.push("/")
+	}, [router, session])
+
 	const form = useForm<z.infer<typeof authSignInSchema>>({
 		resolver: zodResolver(authSignInSchema),
 		defaultValues: {
@@ -30,20 +39,23 @@ const UserAuthSignInForm: FC = () => {
 		formState: { errors },
 	} = form
 
-	// 2. Define a submit handler.
-	const onSubmit = async (values: z.infer<typeof authSignInSchema>) => {
+	const onSubmit = (values: z.infer<typeof authSignInSchema>) => {
 		setIsLoading(true)
-		try {
-			await signIn("credentials", values)
-		} catch (error: any) {
-			toast({
-				title: "An error occurred.",
-				description: "Invalid credentials",
-				variant: "destructive",
+		signIn("credentials", {
+			...values,
+			redirect: false,
+		})
+			.then(callback => {
+				if (callback?.error) {
+					toast({
+						title: "Uh oh! Something went wrong.",
+						description: "Invalid login credentials",
+						variant: "destructive",
+					})
+					setIsLoading(false)
+				}
 			})
-		} finally {
-			setIsLoading(false)
-		}
+			.finally(() => setIsLoading(false))
 	}
 
 	return (
@@ -124,4 +136,4 @@ const UserAuthSignInForm: FC = () => {
 	)
 }
 
-export default UserAuthSignInForm
+export default AuthSignInForm

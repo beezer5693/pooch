@@ -81,9 +81,6 @@ export const authOptions: NextAuthOptions = {
 				picture: dbUser.image,
 			}
 		},
-		redirect() {
-			return "/"
-		},
 	},
 	debug: true,
 	secret: process.env.NEXTAUTH_SECRET,

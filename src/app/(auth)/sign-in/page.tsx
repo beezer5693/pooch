@@ -3,7 +3,7 @@
 import { FC, useEffect, useState } from "react"
 import { useTheme } from "next-themes"
 import { UseThemeProps } from "next-themes/dist/types"
-import UserAuthSignInForm from "@/components/auth/AuthSigninForm"
+import AuthSignInForm from "@/components/auth/AuthSigninForm"
 import GoogleAuth from "@/components/auth/GoogleAuth"
 import DiscordAuth from "@/components/auth/DiscordAuth"
 import Link from "next/link"
@@ -37,7 +37,7 @@ const SignIn: FC = () => {
 							</p>
 						</div>
 						<div className="mt-3 space-y-7">
-							<UserAuthSignInForm />
+							<AuthSignInForm />
 							<div className="flex items-center gap-3">
 								<div className="flex-1 border-t"></div>
 								<p className="text-xs text-muted-foreground">OR CONTINUE WITH</p>
