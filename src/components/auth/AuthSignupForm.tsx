@@ -157,16 +157,7 @@ const AuthSignUpForm: FC = () => {
 						<FormItem className="w-full">
 							<div className="flex w-full items-center justify-between">
 								<FormLabel>Password</FormLabel>
-								{percentage > 0 && (
-									<div className="flex items-center gap-1">
-										<p className="text-xs text-muted-foreground">{percentage === 100 ? "Strong" : "Too weak"}</p>
-										{percentage === 100 ? (
-											<CheckCircle2 size={15} className="text-success" />
-										) : (
-											<PasswordValidationProgress percentage={percentage} />
-										)}
-									</div>
-								)}
+								{percentage > 0 && <PasswordValidationProgress percentage={percentage} password={password} />}
 							</div>
 							<FormControl>
 								<div className="relative">
