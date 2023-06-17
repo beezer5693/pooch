@@ -8,28 +8,32 @@ import { useForm } from "react-hook-form"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
+import { usePasswordValidation } from "@/hooks/usePasswordValidation"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
 import { Checkbox } from "@/components/ui/Checkbox"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
+import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
+import PasswordValidationProgress from "../PasswordValidationProgress"
 
 const AuthSignUpForm: FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [password, setPassword] = useState<string>("")
+	const [percentage, setPercentage] = useState<number>(0)
 
 	const session = useSession()
 	const router = useRouter()
 	const { toast } = useToast()
 
+	// Check if user is authenticated, if so redirect to home page.
 	useEffect(() => {
 		session.status === "authenticated" && router.push("/")
 	}, [router, session])
 
-	// 1. Define your form.
 	const form = useForm<z.infer<typeof authSignUpSchema>>({
 		resolver: zodResolver(authSignUpSchema),
 		defaultValues: {
@@ -41,10 +45,34 @@ const AuthSignUpForm: FC = () => {
 	})
 
 	const {
+		watch,
 		formState: { errors },
 	} = form
 
-	// 2. Define a submit handler.
+	// Watch for changes in the password input field.
+	const passwordInput = watch("password")
+	// Check if the password input field is valid.
+	const passwordValidationCheck = usePasswordValidation(password)
+
+	// Set the password state to the password input field.
+	useEffect(() => {
+		setPassword(passwordInput)
+	}, [passwordInput])
+
+	// Calculate the percentage of the password validation check.
+	// Used to display the password strength in the radial progress bar.
+	useEffect(() => {
+		const percentage = passwordValidationCheck.reduce((acc, curr) => {
+			if (curr.isValidated === true) {
+				return acc + 1
+			}
+			return acc
+		}, 0)
+
+		setPercentage(percentage * 20)
+	}, [password, passwordValidationCheck])
+
+	// Handle form submission.
 	const onSubmit = (values: z.infer<typeof authSignUpSchema>) => {
 		setIsLoading(true)
 
@@ -127,7 +155,19 @@ const AuthSignUpForm: FC = () => {
 					name="password"
 					render={({ field }) => (
 						<FormItem className="w-full">
-							<FormLabel>Password</FormLabel>
+							<div className="flex w-full items-center justify-between">
+								<FormLabel>Password</FormLabel>
+								{percentage > 0 && (
+									<div className="flex items-center gap-1">
+										<p className="text-xs text-muted-foreground">{percentage === 100 ? "Strong" : "Too weak"}</p>
+										{percentage === 100 ? (
+											<CheckCircle2 size={15} className="text-success" />
+										) : (
+											<PasswordValidationProgress percentage={percentage} />
+										)}
+									</div>
+								)}
+							</div>
 							<FormControl>
 								<div className="relative">
 									<Input
@@ -199,7 +239,7 @@ const AuthSignUpForm: FC = () => {
 				</div>
 				<div className="pt-3.5">
 					<Button disabled={isLoading} className="w-full disabled:opacity-70" type="submit">
-						{isLoading && <Loader2 className="mr-2 animate-spin text-primary-foreground" size={17} />}
+						{isLoading && <span className="loading loading-spinner loading-xs mr-2 text-primary-foreground"></span>}
 						<span>Create account</span>
 					</Button>
 				</div>

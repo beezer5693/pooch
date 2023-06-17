@@ -48,8 +48,9 @@ const AuthSignInForm: FC = () => {
 			.then(callback => {
 				if (callback?.error) {
 					toast({
-						title: "Uh oh! Something went wrong.",
-						description: "Invalid login credentials",
+						title: "Invalid login credentials",
+						description:
+							"The email and password you entered did not match our records. Please double-check and try again.",
 						variant: "destructive",
 					})
 					setIsLoading(false)
@@ -127,7 +128,7 @@ const AuthSignInForm: FC = () => {
 				/>
 				<div className="pt-4">
 					<Button disabled={isLoading} className="w-full disabled:opacity-70" type="submit">
-						{isLoading && <Loader2 className="mr-2 animate-spin text-primary-foreground" size={17} />}
+						{isLoading && <span className="loading loading-spinner loading-xs mr-2 text-primary-foreground"></span>}
 						<span>{isLoading ? "Signing in..." : "Sign in"}</span>
 					</Button>
 				</div>

@@ -35,7 +35,7 @@ export default function DiscordAuth() {
 	return (
 		<Button onClick={loginWithDiscord} disabled={isLoading} variant="outline" className="w-full">
 			{isLoading ? (
-				<Loader2 className="mr-2 animate-spin text-accent-foreground" size={17} />
+				<span className="loading loading-spinner loading-xs mr-2 text-accent-foreground"></span>
 			) : (
 				<Icons.discord className="mr-2 h-5 w-5 text-accent-foreground" />
 			)}

@@ -28,7 +28,7 @@ const toastVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-background border",
-				destructive: "group destructive border-destructive bg-background text-primary",
+				destructive: "group destructive border-destructive bg-destructive text-destructive-foreground",
 			},
 		},
 		defaultVariants: {
@@ -67,15 +67,13 @@ const ToastClose = React.forwardRef<
 	<ToastPrimitives.Close
 		ref={ref}
 		className={cn(
-			"absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-accent-foreground/70 group-[.destructive]:hover:text-accent-foreground group-[.destructive]:focus:ring-transparent group-[.destructive]:focus:ring-offset-transparent",
+			"absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-destructive-foreground/70 group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-transparent group-[.destructive]:focus:ring-offset-transparent",
 			className
 		)}
 		toast-close=""
 		{...props}
 	>
-		<div className="rounded p-0.5 transition duration-200 ease-out hover:bg-accent">
-			<X className="h-4 w-4" />
-		</div>
+		<X className="h-4 w-4" />
 	</ToastPrimitives.Close>
 ))
 ToastClose.displayName = ToastPrimitives.Close.displayName
@@ -84,11 +82,7 @@ const ToastTitle = React.forwardRef<
 	React.ElementRef<typeof ToastPrimitives.Title>,
 	React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
 >(({ className, ...props }, ref) => (
-	<ToastPrimitives.Title
-		ref={ref}
-		className={cn("text-sm font-semibold group-[.destructive]:text-destructive", className)}
-		{...props}
-	/>
+	<ToastPrimitives.Title ref={ref} className={cn("text-sm font-semibold", className)} {...props} />
 ))
 ToastTitle.displayName = ToastPrimitives.Title.displayName
 

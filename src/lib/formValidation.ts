@@ -18,10 +18,10 @@ export const authSignUpSchema: ZodType<AuthFormType> = z.object({
 		.string()
 		.nonempty("Password is required")
 		.min(8, "Password must be at least 8 characters")
-		.refine(val => /[A-Z]/.test(val), "Password must contain at least 1 uppercase letter"),
-	// .refine(val => /[a-z]/.test(val), "Password must contain at least 1 lowercase letter")
-	// .refine(val => /[0-9]/.test(val), "Password must contain at least 1 number")
-	// .refine(val => /[^A-Za-z0-9]/.test(val), "Password must contain at least 1 symbol"),
+		.refine(val => /[A-Z]/.test(val), "Password must contain at least 1 uppercase letter")
+		.refine(val => /[a-z]/.test(val), "Password must contain at least 1 lowercase letter")
+		.refine(val => /[0-9]/.test(val), "Password must contain at least 1 number")
+		.refine(val => /[^A-Za-z0-9]/.test(val), "Password must contain at least 1 symbol"),
 	agreement: z
 		.boolean()
 		.default(false)

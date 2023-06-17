@@ -15,9 +15,11 @@ export function Toaster() {
 						<div className="flex justify-center gap-1">
 							{title && (
 								<div className="flex gap-3">
-									<div className="pb-2.5">
-										<AlertCircle size={20} className="text-red-500" />
-									</div>
+									{props.variant === "destructive" && (
+										<div className="pb-2.5">
+											<AlertCircle size={20} className="text-white" />
+										</div>
+									)}
 									<div className="space-y-1">
 										<ToastTitle>{title}</ToastTitle>
 										{description && <ToastDescription>{description}</ToastDescription>}

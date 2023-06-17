@@ -35,7 +35,7 @@ const GoogleAuth: FC = () => {
 	return (
 		<Button onClick={loginWithGoogle} disabled={isLoading} variant="outline" className="w-full">
 			{isLoading ? (
-				<Loader2 className="mr-2 animate-spin text-accent-foreground" size={17} />
+				<span className="loading loading-spinner loading-xs mr-2 text-accent-foreground"></span>
 			) : (
 				<Icons.google className="mr-2 h-4 w-4 text-accent-foreground" />
 			)}
