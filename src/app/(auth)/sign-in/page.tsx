@@ -5,7 +5,6 @@ import { useTheme } from "next-themes"
 import { UseThemeProps } from "next-themes/dist/types"
 import AuthSignInForm from "@/components/auth/AuthSigninForm"
 import GoogleAuth from "@/components/auth/GoogleAuth"
-import DiscordAuth from "@/components/auth/DiscordAuth"
 import Link from "next/link"
 import Logo from "@/components/Logo"
 
@@ -32,7 +31,10 @@ const SignIn: FC = () => {
 							<p className="text-sm text-muted-foreground">
 								New to Pooch?{" "}
 								<Link className="font-medium" href={"/sign-up"}>
-									<span className="text-sky-500 dark:text-sky-400">Sign up for an account</span>.
+									<span className="text-sky-500 transition duration-200 ease-out hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-500">
+										Sign up for an account
+									</span>
+									.
 								</Link>
 							</p>
 						</div>
@@ -40,13 +42,10 @@ const SignIn: FC = () => {
 							<AuthSignInForm />
 							<div className="flex items-center gap-3">
 								<div className="flex-1 border-t"></div>
-								<p className="text-xs text-muted-foreground">OR CONTINUE WITH</p>
+								<p className="text-xs text-muted-foreground">OR</p>
 								<div className="flex-1 border-t"></div>
 							</div>
-							<div className="flex gap-4">
-								<GoogleAuth />
-								<DiscordAuth />
-							</div>
+							<GoogleAuth />
 						</div>
 					</div>
 				</div>

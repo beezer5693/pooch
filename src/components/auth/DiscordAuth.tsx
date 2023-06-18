@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
-import { Loader2 } from "lucide-react"
 import { Icons } from "../Icons"
 import { useToast } from "@/hooks/use-toast"
 import { signIn } from "next-auth/react"

@@ -1,6 +1,5 @@
 "use client"
 
-import { FC, ReactNode } from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { ThemeProviderProps } from "next-themes/dist/types"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"

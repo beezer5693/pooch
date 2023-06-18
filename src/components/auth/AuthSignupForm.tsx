@@ -9,11 +9,11 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import { usePasswordValidation } from "@/hooks/usePasswordValidation"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
 import { Checkbox } from "@/components/ui/Checkbox"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
-import { Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
@@ -25,14 +25,14 @@ const AuthSignUpForm: FC = () => {
 	const [password, setPassword] = useState<string>("")
 	const [percentage, setPercentage] = useState<number>(0)
 
-	const session = useSession()
+	const { status } = useSession()
 	const router = useRouter()
 	const { toast } = useToast()
 
 	// Check if user is authenticated, if so redirect to home page.
 	useEffect(() => {
-		session.status === "authenticated" && router.push("/")
-	}, [router, session])
+		status === "authenticated" && router.push("/")
+	}, [router, status])
 
 	const form = useForm<z.infer<typeof authSignUpSchema>>({
 		resolver: zodResolver(authSignUpSchema),
@@ -168,23 +168,6 @@ const AuthSignUpForm: FC = () => {
 										{...field}
 										required
 									/>
-									{showPassword ? (
-										<EyeOff
-											onClick={() => setShowPassword(false)}
-											className={cn(
-												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
-											)}
-											size={20}
-										/>
-									) : (
-										<Eye
-											onClick={() => setShowPassword(true)}
-											className={cn(
-												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
-											)}
-											size={20}
-										/>
-									)}
 									{errors.password && (
 										<AlertCircle
 											className="absolute right-10 top-1/2 -translate-y-1/2 stroke-[1.5px] text-destructive"

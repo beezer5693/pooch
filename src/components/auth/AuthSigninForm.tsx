@@ -9,23 +9,23 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { authSignInSchema } from "@/lib/formValidation"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { cn } from "@/lib/utils"
-import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react"
+import { AlertCircle } from "lucide-react"
 
 const AuthSignInForm: FC = () => {
 	const [showPassword, setShowPassword] = useState<boolean>(false)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 
-	const session = useSession()
+	const { status } = useSession()
 	const router = useRouter()
 	const { toast } = useToast()
 
 	useEffect(() => {
-		session.status === "authenticated" && router.push("/")
-	}, [router, session])
+		status === "authenticated" && router.push("/")
+	}, [router, status])
 
 	const form = useForm<z.infer<typeof authSignInSchema>>({
 		resolver: zodResolver(authSignInSchema),
@@ -97,23 +97,6 @@ const AuthSignInForm: FC = () => {
 										type={showPassword ? "text" : "password"}
 										{...field}
 									/>
-									{showPassword ? (
-										<EyeOff
-											onClick={() => setShowPassword(false)}
-											className={cn(
-												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
-											)}
-											size={20}
-										/>
-									) : (
-										<Eye
-											onClick={() => setShowPassword(true)}
-											className={cn(
-												"absolute right-3 top-1/2 z-10 -translate-y-1/2 cursor-pointer stroke-[1.5px] text-muted-foreground transition duration-300 ease-out hover:text-accent-foreground"
-											)}
-											size={20}
-										/>
-									)}
 									{errors.password && (
 										<AlertCircle
 											className="absolute right-10 top-1/2 -translate-y-1/2 stroke-[1.5px] text-destructive"

@@ -2,7 +2,6 @@
 
 import { FC, useState } from "react"
 import { Button } from "@/components/ui/Button"
-import { Loader2 } from "lucide-react"
 import { signIn } from "next-auth/react"
 import { Icons } from "../Icons"
 import { useToast } from "@/hooks/use-toast"
@@ -39,7 +38,7 @@ const GoogleAuth: FC = () => {
 			) : (
 				<Icons.google className="mr-2 h-4 w-4 text-accent-foreground" />
 			)}
-			<span>Google</span>
+			<span>Continue with Google</span>
 		</Button>
 	)
 }

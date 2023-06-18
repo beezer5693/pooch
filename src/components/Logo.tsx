@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { useTheme } from "next-themes"
 import { UseThemeProps } from "next-themes/dist/types"
+import Link from "next/link"
 
 type LogoProps = {
 	theme: UseThemeProps["theme"]
@@ -25,5 +25,9 @@ export default function Logo({ theme, width, height }: LogoProps) {
 			break
 	}
 
-	return <Image priority src={src} width={width} height={height} alt="logo" />
+	return (
+		<Link href="/">
+			<Image priority src={src} width={width} height={height} alt="logo" />
+		</Link>
+	)
 }
